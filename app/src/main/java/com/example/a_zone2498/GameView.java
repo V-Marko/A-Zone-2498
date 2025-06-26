@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class GameView extends View {
-    private Bitmap body, head, wheel;
+    private Bitmap body, head, wheel, head1, head2;
     private Player player;
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -26,9 +26,17 @@ public class GameView extends View {
         Bitmap originalWheel = BitmapFactory.decodeResource(getResources(), R.drawable.wheel);
         int[] originalWheelWithHeight = {originalWheel.getWidth() / 15, originalWheel.getHeight() / 15};
 
+        Bitmap originalHead1 = BitmapFactory.decodeResource(getResources(), R.drawable.heand);
+        int[] originalHead1WithHeight = {originalHead1.getWidth() / 15, originalHead1.getHeight() / 15};
+
+        Bitmap originalHead2 = BitmapFactory.decodeResource(getResources(), R.drawable.heand_2);
+        int[] originalHead2WithHeight = {originalHead2.getWidth() / 15, originalHead2.getHeight() / 15};
+
         body = loadAndScaleBitmap(context, R.drawable.body, originalBodyWithHeight[0], originalBodyWithHeight[1]);
         head = loadAndScaleBitmap(context, R.drawable.head, originalHeadWithHeight[0], originalHeadWithHeight[1]);
         wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelWithHeight[0], originalWheelWithHeight[1]);
+        head1 = loadAndScaleBitmap(context, R.drawable.heand, originalHead1WithHeight[0], originalHead1WithHeight[1]);
+        head2 = loadAndScaleBitmap(context, R.drawable.heand_2, originalHead2WithHeight[0], originalHead2WithHeight[1]);
 
         player = new Player(300, 700);
 
@@ -65,7 +73,9 @@ public class GameView extends View {
         canvas.drawBitmap(wheel, matrix, null);
 
         canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight(), null);
-        canvas.drawBitmap(head, (body.getHeight() / 4) + player.getX(), player.getY() - body.getHeight() + 10 - head.getHeight(), null);
+        canvas.drawBitmap(head, (body.getWidth() / 4) + player.getX(), player.getY() - body.getHeight() + 10 - head.getHeight(), null);
+        canvas.drawBitmap(head1, (body.getWidth() / 4) + player.getX() - 10, player.getY() - body.getHeight() + 10 - head1.getHeight() - 10, null);
+        canvas.drawBitmap(head2, (body.getWidth() / 4) + player.getX() + 10, player.getY() - body.getHeight() + 10 - head2.getHeight() - 20, null);
     }
 
     public void moveLeft(boolean start) {
