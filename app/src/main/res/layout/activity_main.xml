@@ -13,31 +13,45 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="12dp"
+        android:background="@android:color/transparent"
+        android:gravity="center">
 
         <ImageButton
             android:id="@+id/btnLeft"
+            style="?attr/buttonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_left"
+            android:contentDescription="Move Left"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Left" />
-
-        <Button
+        <ImageButton
             android:id="@+id/btnRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Right" />
+            style="?attr/buttonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_right"
+            android:contentDescription="Move Right"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnJump"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jump" />
+            style="?attr/buttonStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/button_up"
+            android:contentDescription="Jump"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
     </LinearLayout>
-
 </RelativeLayout>
