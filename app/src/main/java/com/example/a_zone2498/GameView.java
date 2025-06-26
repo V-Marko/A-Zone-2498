@@ -66,17 +66,30 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // Draw the wheel
         Matrix matrix = new Matrix();
         matrix.postTranslate(-wheel.getWidth() / 2f, -wheel.getHeight() / 2f);
         matrix.postRotate(player.getWheelRotation());
         matrix.postTranslate(player.getX() + body.getWidth() / 2 - 10, player.getY() - 10);
         canvas.drawBitmap(wheel, matrix, null);
 
+        // Draw head1
+        canvas.drawBitmap(head1, player.getX() + 20, player.getY() - body.getHeight() + 170 - head1.getHeight() - 10, null);
+
+        // Draw head2
+        canvas.drawBitmap(head2, player.getX() + body.getWidth()-25, player.getY() - body.getHeight() + 150 - head2.getHeight() - 20, null);
+
+        // Draw  body
         canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight(), null);
+
+        // Draw head
         canvas.drawBitmap(head, (body.getWidth() / 4) + player.getX(), player.getY() - body.getHeight() + 10 - head.getHeight(), null);
-        canvas.drawBitmap(head1, (body.getWidth() / 4) + player.getX() - 10, player.getY() - body.getHeight() + 10 - head1.getHeight() - 10, null);
-        canvas.drawBitmap(head2, (body.getWidth() / 4) + player.getX() + 10, player.getY() - body.getHeight() + 10 - head2.getHeight() - 20, null);
+
+
     }
+
+
+
 
     public void moveLeft(boolean start) {
         player.moveLeft(start);
