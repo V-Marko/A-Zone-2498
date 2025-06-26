@@ -18,12 +18,17 @@ public class GameView extends View {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Bitmap originalBody = BitmapFactory.decodeResource(getResources(), R.drawable.body);
-        Bitmap originalHead = BitmapFactory.decodeResource(getResources(), R.drawable.head);
-        Bitmap originalWheel = BitmapFactory.decodeResource(getResources(), R.drawable.koleso);
+        int[] originalBodyWithHeight = {originalBody.getWidth() / 15, originalBody.getHeight() / 15};
 
-        body = loadAndScaleBitmap(context, R.drawable.body, originalBody.getWidth() / 15, originalBody.getHeight() / 15);
-        head = loadAndScaleBitmap(context, R.drawable.head, originalHead.getWidth() / 15, originalHead.getHeight() / 15);
-        wheel = loadAndScaleBitmap(context, R.drawable.koleso, originalWheel.getWidth() / 15, originalWheel.getHeight() / 15);
+        Bitmap originalHead = BitmapFactory.decodeResource(getResources(), R.drawable.head);
+        int[] originalHeadWithHeight = {originalHead.getWidth() / 15, originalHead.getHeight() / 15};
+
+        Bitmap originalWheel = BitmapFactory.decodeResource(getResources(), R.drawable.wheel);
+        int[] originalWheelWithHeight = {originalWheel.getWidth() / 15, originalWheel.getHeight() / 15};
+
+        body = loadAndScaleBitmap(context, R.drawable.body, originalBodyWithHeight[0], originalBodyWithHeight[1]);
+        head = loadAndScaleBitmap(context, R.drawable.head, originalHeadWithHeight[0], originalHeadWithHeight[1]);
+        wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelWithHeight[0], originalWheelWithHeight[1]);
 
         player = new Player(300, 700);
 
