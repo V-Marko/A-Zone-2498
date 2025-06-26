@@ -1,24 +1,53 @@
 package com.example.a_zone2498;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    private GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        gameView = findViewById(R.id.gameView);
+        Button btnLeft = findViewById(R.id.btnLeft);
+        Button btnRight = findViewById(R.id.btnRight);
+        Button btnJump = findViewById(R.id.btnJump);
+
+        btnLeft.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gameView.moveLeft(true);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    gameView.moveLeft(false);
+                }
+                return true;
+            }
+        });
+
+        btnRight.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gameView.moveRight(true);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    gameView.moveRight(false);
+                }
+                return true;
+            }
+        });
+
+        btnJump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameView.jump();
+            }
         });
     }
 }

@@ -1,0 +1,65 @@
+package com.example.a_zone2498;
+
+public class Player {
+    private int x, y;
+    private int wheelRotation = 0;
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
+    private boolean isJumping = false;
+    private int jumpY = 0;
+    private int jumpHeight = 100;
+    private int groundY;
+
+    public Player(int x, int groundY) {
+        this.x = x;
+        this.groundY = groundY;
+        this.y = groundY;
+    }
+
+    public void moveLeft(boolean start) {
+        movingLeft = start;
+    }
+
+    public void moveRight(boolean start) {
+        movingRight = start;
+    }
+
+    public void jump() {
+        if (!isJumping) {
+            isJumping = true;
+            jumpY = 0;
+        }
+    }
+
+    public void update() {
+        if (movingLeft) {
+            x -= 10;
+            wheelRotation -= 15;
+        }
+        if (movingRight) {
+            x += 10;
+            wheelRotation += 15;
+        }
+        if (isJumping) {
+            jumpY += 10;
+            y = groundY - (int)(jumpHeight * Math.sin(Math.PI * jumpY / 100));
+            if (jumpY >= 100) {
+                isJumping = false;
+                y = groundY;
+                jumpY = 0;
+            }
+        }
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWheelRotation() {
+        return wheelRotation;
+    }
+}
