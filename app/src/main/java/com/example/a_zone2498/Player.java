@@ -1,5 +1,7 @@
 package com.example.a_zone2498;
 
+import java.util.ArrayList;
+
 public class Player {
     private int x, y;
     public float speed = 15;
@@ -13,6 +15,7 @@ public class Player {
     private boolean isJumping = false;
     private int jumpY = 0;
     private int groundY;
+    private ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Player(int x, int groundY) {
         this.x = x;
@@ -65,5 +68,24 @@ public class Player {
 
     public int getWheelRotation() {
         return wheelRotation;
+    }
+
+    public void shoot() {
+        bullets.add(new Bullet(x + 100, y - 100));
+    }
+
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
+    }
+    public void updateBullets(int screenWidth) {
+        ArrayList<Bullet> toRemove = new ArrayList<>();
+        for (Bullet bullet : bullets) {
+            bullet.update();
+            if (bullet.isOffScreen(screenWidth)) {
+                toRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(toRemove);
     }
 }

@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton btnLeft = findViewById(R.id.btnLeft);
         ImageButton btnRight = findViewById(R.id.btnRight);
         ImageButton btnJump = findViewById(R.id.btnJump);
+        ImageButton btnShoot = findViewById(R.id.btnShoot);
 
         btnLeft.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -43,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
                     gameView.moveRight(false);
                 }
                 return true;
+            }
+        });
+        btnShoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameView.shoot();
             }
         });
 
