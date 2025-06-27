@@ -35,12 +35,12 @@ public class GameView extends View {
         Bitmap originalHead2 = BitmapFactory.decodeResource(getResources(), R.drawable.heand_2);
         int[] originalHead2Size = {originalHead2.getWidth() / scale, originalHead2.getHeight() / scale};
 
-        // Для пуль (размеры вычислены "в лоб", можно менять)
         int[] originalShoot1Size = {1709/4, 490/4};
         int[] originalShoot2Size = {577/4, 353/4};
 
         Bitmap originalBullet = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
         int[] originalBulletSize = {originalBullet.getWidth() / scale, originalBullet.getHeight() / scale};
+
         body = loadAndScaleBitmap(context, R.drawable.body, originalBodySize[0], originalBodySize[1]);
         head = loadAndScaleBitmap(context, R.drawable.head, originalHeadSize[0], originalHeadSize[1]);
         wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelSize[0], originalWheelSize[1]);
@@ -85,10 +85,29 @@ public class GameView extends View {
         matrix.postTranslate(player.getX() + body.getWidth() / 2f - 10, player.getY() - 10);
         canvas.drawBitmap(wheel, matrix, null);
 
-        canvas.drawBitmap(head1, player.getX() + 20,
-                player.getY() - body.getHeight() + 170 - head1.getHeight() - 10, null);
-        canvas.drawBitmap(head2, player.getX() + body.getWidth() - 25,
-                player.getY() - body.getHeight() + 150 - head2.getHeight() - 20, null);
+        // Отрисовка head1 с отдачей, синхронизированной с shoot2
+        Matrix head1Matrix = new Matrix();
+        if (player.isRecoiling()) {
+            head1Matrix.postRotate(-player.getRecoilRotation(), head1.getWidth() / 2f, head1.getHeight() / 2f);
+            head1Matrix.postTranslate(player.getX() + 20,
+                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10 - player.getRecoilOffsetShoot2());
+        } else {
+            head1Matrix.postTranslate(player.getX() + 20,
+                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10);
+        }
+        canvas.drawBitmap(head1, head1Matrix, null);
+
+        // Отрисовка head2 с отдачей, синхронизированной с shoot1
+        Matrix head2Matrix = new Matrix();
+        if (player.isRecoiling()) {
+            head2Matrix.postRotate(player.getRecoilRotation(), head2.getWidth() / 2f, head2.getHeight() / 2f);
+            head2Matrix.postTranslate(player.getX() + body.getWidth() - 25,
+                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20 - player.getRecoilOffsetShoot1());
+        } else {
+            head2Matrix.postTranslate(player.getX() + body.getWidth() - 25,
+                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20);
+        }
+        canvas.drawBitmap(head2, head2Matrix, null);
 
         canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight(), null);
 
@@ -97,16 +116,30 @@ public class GameView extends View {
                 player.getY() - body.getHeight() - head.getHeight() + 10,
                 null);
 
-        canvas.drawBitmap(shoot1,
-                player.getX() + 10,
-                player.getY() - body.getHeight() + 150,
-                null);
-        canvas.drawBitmap(shoot2,
-                player.getX() + body.getWidth() - shoot2.getWidth() + 100,
-                player.getY() - body.getHeight() + 90,
-                null);
+        // Отрисовка shoot1 с уменьшенным смещением
+        Matrix shoot1Matrix = new Matrix();
+        if (player.isRecoiling()) {
+            shoot1Matrix.postRotate(player.getRecoilRotation(), shoot1.getWidth() / 2f, shoot1.getHeight() / 2f);
+            shoot1Matrix.postTranslate(player.getX() + 10,
+                    player.getY() - body.getHeight() + 150 - player.getRecoilOffsetShoot1());
+        } else {
+            shoot1Matrix.postTranslate(player.getX() + 10, player.getY() - body.getHeight() + 150);
+        }
+        canvas.drawBitmap(shoot1, shoot1Matrix, null);
 
-        for (Bullet bulletArray : player.getBullets()) {//-------------------------------------------------------------------
+        // Отрисовка shoot2
+        Matrix shoot2Matrix = new Matrix();
+        if (player.isRecoiling()) {
+            shoot2Matrix.postRotate(-player.getRecoilRotation(), shoot2.getWidth() / 2f, shoot2.getHeight() / 2f);
+            shoot2Matrix.postTranslate(player.getX() + body.getWidth() - shoot2.getWidth() + 100,
+                    player.getY() - body.getHeight() + 90 - player.getRecoilOffsetShoot2());
+        } else {
+            shoot2Matrix.postTranslate(player.getX() + body.getWidth() - shoot2.getWidth() + 100,
+                    player.getY() - body.getHeight() + 90);
+        }
+        canvas.drawBitmap(shoot2, shoot2Matrix, null);
+
+        for (Bullet bulletArray : player.getBullets()) {
             canvas.drawBitmap(bullet, bulletArray.getX(), bulletArray.getY(), null);
         }
     }
