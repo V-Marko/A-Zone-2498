@@ -71,7 +71,8 @@ public class Player {
     }
 
     public void shoot() {
-        bullets.add(new Bullet(x + 100, y - 100));
+        bullets.add(new Bullet(x+400, y-135));
+        bullets.add(new Bullet(x+390, y-200));
     }
 
 

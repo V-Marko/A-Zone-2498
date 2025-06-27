@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class GameView extends View {
-    private Bitmap body, head, wheel, head1, head2, shoot1, shoot2;
+    private Bitmap body, head, wheel, head1, head2, shoot1, shoot2, bullet;
     private Player player;
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -18,7 +18,6 @@ public class GameView extends View {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // Масштабирование ресурсов
         int scale = 15;
 
         Bitmap originalBody = BitmapFactory.decodeResource(getResources(), R.drawable.body);
@@ -40,6 +39,8 @@ public class GameView extends View {
         int[] originalShoot1Size = {1709/4, 490/4};
         int[] originalShoot2Size = {577/4, 353/4};
 
+        Bitmap originalBullet = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
+        int[] originalBulletSize = {originalBullet.getWidth() / scale, originalBullet.getHeight() / scale};
         body = loadAndScaleBitmap(context, R.drawable.body, originalBodySize[0], originalBodySize[1]);
         head = loadAndScaleBitmap(context, R.drawable.head, originalHeadSize[0], originalHeadSize[1]);
         wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelSize[0], originalWheelSize[1]);
@@ -47,6 +48,7 @@ public class GameView extends View {
         head2 = loadAndScaleBitmap(context, R.drawable.heand_2, originalHead2Size[0], originalHead2Size[1]);
         shoot1 = loadAndScaleBitmap(context, R.drawable.shoot_1, originalShoot1Size[0], originalShoot1Size[1]);
         shoot2 = loadAndScaleBitmap(context, R.drawable.shoot_2, originalShoot2Size[0], originalShoot2Size[1]);
+        bullet = loadAndScaleBitmap(context, R.drawable.bullet, originalBulletSize[0], originalBulletSize[1]);
 
         player = new Player(300, 700);
 
@@ -104,8 +106,8 @@ public class GameView extends View {
                 player.getY() - body.getHeight() + 90,
                 null);
 
-        for (Bullet bullet : player.getBullets()) {
-            canvas.drawBitmap(head1, bullet.getX(), bullet.getY(), null);
+        for (Bullet bulletArray : player.getBullets()) {//-------------------------------------------------------------------
+            canvas.drawBitmap(bullet, bulletArray.getX(), bulletArray.getY(), null);
         }
     }
 
