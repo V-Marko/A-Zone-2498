@@ -21,23 +21,18 @@ public class Player {
     private final int RECOIL_DURATION = 10;
     private final int RECOIL_OFFSET_MAX_SHOOT1 = 10;
     private final int RECOIL_OFFSET_MAX_SHOOT2 = 20;
-    private final int RECOIL_OFFSET_MAX_HEAD1 = 20;
-    private final int RECOIL_OFFSET_MAX_HEAD2 = 20;
-    private final float RECOIL_ROTATION_MAX = 10;
-    private final int RECOIL_BACKWARD_MAX = 10;
+    private final float RECOIL_ROTATION_MAX = 15;
     private float currentRecoilOffsetShoot1 = 0;
     private float currentRecoilOffsetShoot2 = 0;
-    private float currentRecoilOffsetHead1 = 0;
-    private float currentRecoilOffsetHead2 = 0;
     private float currentRecoilRotation = 0;
-    private float currentRecoilBackward = 0;
-    private int initialX;
+    private int breatheTimer = 0;
+    private final int BREATHE_PERIOD = 30;
+    private final float BREATHE_AMPLITUDE = 10;
 
     public Player(int x, int groundY) {
         this.x = x;
         this.groundY = groundY;
         this.y = groundY;
-        this.initialX = x;
     }
 
     public void moveLeft(boolean start) {
@@ -60,20 +55,16 @@ public class Player {
         bullets.add(new Bullet(x + 390, y - 200));
         isRecoiling = true;
         recoilTimer = 0;
-        initialX = x;
-        currentRecoilBackward = RECOIL_BACKWARD_MAX;
     }
 
     public void update() {
         if (movingLeft) {
             x -= speed;
             wheelRotation -= 15;
-            initialX = x;
         }
         if (movingRight) {
             x += speed;
             wheelRotation += 15;
-            initialX = x;
         }
         if (isJumping) {
             jumpY += jumpSpeed;
@@ -90,28 +81,23 @@ public class Player {
             if (progress < 0.5f) {
                 currentRecoilOffsetShoot1 = RECOIL_OFFSET_MAX_SHOOT1 * (progress * 2);
                 currentRecoilOffsetShoot2 = RECOIL_OFFSET_MAX_SHOOT2 * (progress * 2);
-                currentRecoilOffsetHead1 = RECOIL_OFFSET_MAX_HEAD1 * (progress * 2);
-                currentRecoilOffsetHead2 = RECOIL_OFFSET_MAX_HEAD2 * (progress * 2);
                 currentRecoilRotation = RECOIL_ROTATION_MAX * (progress * 2);
             } else {
                 currentRecoilOffsetShoot1 = RECOIL_OFFSET_MAX_SHOOT1 * (1 - (progress - 0.5f) * 2);
                 currentRecoilOffsetShoot2 = RECOIL_OFFSET_MAX_SHOOT2 * (1 - (progress - 0.5f) * 2);
-                currentRecoilOffsetHead1 = RECOIL_OFFSET_MAX_HEAD1 * (1 - (progress - 0.5f) * 2);
-                currentRecoilOffsetHead2 = RECOIL_OFFSET_MAX_HEAD2 * (1 - (progress - 0.5f) * 2);
                 currentRecoilRotation = RECOIL_ROTATION_MAX * (1 - (progress - 0.5f) * 2);
             }
-            currentRecoilBackward = RECOIL_BACKWARD_MAX * (1 - progress);
-            x = initialX - (int) currentRecoilBackward;
             if (recoilTimer >= RECOIL_DURATION) {
                 isRecoiling = false;
                 currentRecoilOffsetShoot1 = 0;
                 currentRecoilOffsetShoot2 = 0;
-                currentRecoilOffsetHead1 = 0;
-                currentRecoilOffsetHead2 = 0;
                 currentRecoilRotation = 0;
-                currentRecoilBackward = 0;
-                x = initialX;
             }
+        }
+        if (!movingLeft && !movingRight && !isJumping && !isRecoiling) {
+            breatheTimer = (breatheTimer + 1) % BREATHE_PERIOD;
+        } else {
+            breatheTimer = 0;
         }
     }
 
@@ -143,16 +129,15 @@ public class Player {
         return currentRecoilOffsetShoot2;
     }
 
-    public float getRecoilOffsetHead1() {
-        return currentRecoilOffsetHead1;
-    }
-
-    public float getRecoilOffsetHead2() {
-        return currentRecoilOffsetHead2;
-    }
-
     public float getRecoilRotation() {
         return currentRecoilRotation;
+    }
+
+    public float getBreatheOffset() {
+        if (!movingLeft && !movingRight && !isJumping && !isRecoiling) {
+            return (float) (BREATHE_AMPLITUDE * Math.sin(2 * Math.PI * breatheTimer / BREATHE_PERIOD));
+        }
+        return 0;
     }
 
     public void updateBullets(int screenWidth) {

@@ -79,63 +79,61 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(-wheel.getWidth() / 2f, -wheel.getHeight() / 2f);
-        matrix.postRotate(player.getWheelRotation());
-        matrix.postTranslate(player.getX() + body.getWidth() / 2f - 10, player.getY() - 10);
-        canvas.drawBitmap(wheel, matrix, null);
+        float breatheOffset = player.getBreatheOffset();
 
-        // Отрисовка head1 с отдачей, синхронизированной с shoot2
+        Matrix wheelMatrix = new Matrix();
+        wheelMatrix.postTranslate(-wheel.getWidth() / 2f, -wheel.getHeight() / 2f);
+        wheelMatrix.postRotate(player.getWheelRotation());
+        wheelMatrix.postTranslate(player.getX() + body.getWidth() / 2f - 10, player.getY() - 10);
+        canvas.drawBitmap(wheel, wheelMatrix, null);
+
         Matrix head1Matrix = new Matrix();
         if (player.isRecoiling()) {
             head1Matrix.postRotate(-player.getRecoilRotation(), head1.getWidth() / 2f, head1.getHeight() / 2f);
             head1Matrix.postTranslate(player.getX() + 20,
-                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10 - player.getRecoilOffsetShoot2());
+                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10 - player.getRecoilOffsetShoot2() + breatheOffset);
         } else {
             head1Matrix.postTranslate(player.getX() + 20,
-                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10);
+                    player.getY() - body.getHeight() + 170 - head1.getHeight() - 10 + breatheOffset);
         }
         canvas.drawBitmap(head1, head1Matrix, null);
 
-        // Отрисовка head2 с отдачей, синхронизированной с shoot1
         Matrix head2Matrix = new Matrix();
         if (player.isRecoiling()) {
             head2Matrix.postRotate(player.getRecoilRotation(), head2.getWidth() / 2f, head2.getHeight() / 2f);
             head2Matrix.postTranslate(player.getX() + body.getWidth() - 25,
-                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20 - player.getRecoilOffsetShoot1());
+                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20 - player.getRecoilOffsetShoot1() + breatheOffset);
         } else {
             head2Matrix.postTranslate(player.getX() + body.getWidth() - 25,
-                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20);
+                    player.getY() - body.getHeight() + 150 - head2.getHeight() - 20 + breatheOffset);
         }
         canvas.drawBitmap(head2, head2Matrix, null);
 
-        canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight(), null);
+        canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight() + breatheOffset, null);
 
         canvas.drawBitmap(head,
                 player.getX() + body.getWidth() / 2f - head.getWidth() / 2f,
-                player.getY() - body.getHeight() - head.getHeight() + 10,
+                player.getY() - body.getHeight() - head.getHeight() + 10 + breatheOffset,
                 null);
 
-        // Отрисовка shoot1 с уменьшенным смещением
         Matrix shoot1Matrix = new Matrix();
         if (player.isRecoiling()) {
             shoot1Matrix.postRotate(player.getRecoilRotation(), shoot1.getWidth() / 2f, shoot1.getHeight() / 2f);
             shoot1Matrix.postTranslate(player.getX() + 10,
-                    player.getY() - body.getHeight() + 150 - player.getRecoilOffsetShoot1());
+                    player.getY() - body.getHeight() + 150 - player.getRecoilOffsetShoot1() + breatheOffset);
         } else {
-            shoot1Matrix.postTranslate(player.getX() + 10, player.getY() - body.getHeight() + 150);
+            shoot1Matrix.postTranslate(player.getX() + 10, player.getY() - body.getHeight() + 150 + breatheOffset);
         }
         canvas.drawBitmap(shoot1, shoot1Matrix, null);
 
-        // Отрисовка shoot2
         Matrix shoot2Matrix = new Matrix();
         if (player.isRecoiling()) {
             shoot2Matrix.postRotate(-player.getRecoilRotation(), shoot2.getWidth() / 2f, shoot2.getHeight() / 2f);
             shoot2Matrix.postTranslate(player.getX() + body.getWidth() - shoot2.getWidth() + 100,
-                    player.getY() - body.getHeight() + 90 - player.getRecoilOffsetShoot2());
+                    player.getY() - body.getHeight() + 90 - player.getRecoilOffsetShoot2() + breatheOffset);
         } else {
             shoot2Matrix.postTranslate(player.getX() + body.getWidth() - shoot2.getWidth() + 100,
-                    player.getY() - body.getHeight() + 90);
+                    player.getY() - body.getHeight() + 90 + breatheOffset);
         }
         canvas.drawBitmap(shoot2, shoot2Matrix, null);
 
