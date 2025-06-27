@@ -10,33 +10,42 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class GameView extends View {
-    private Bitmap body, head, wheel, head1, head2;
+    private Bitmap body, head, wheel, head1, head2, shoot1, shoot2;
     private Player player;
     private Handler handler = new Handler();
     private Runnable runnable;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        // Масштабирование всех ресурсов /15
+        int scale = 15;
+
         Bitmap originalBody = BitmapFactory.decodeResource(getResources(), R.drawable.body);
-        int[] originalBodyWithHeight = {originalBody.getWidth() / 15, originalBody.getHeight() / 15};
+        int[] originalBodySize = {originalBody.getWidth() / scale, originalBody.getHeight() / scale};
 
         Bitmap originalHead = BitmapFactory.decodeResource(getResources(), R.drawable.head);
-        int[] originalHeadWithHeight = {originalHead.getWidth() / 15, originalHead.getHeight() / 15};
+        int[] originalHeadSize = {originalHead.getWidth() / scale, originalHead.getHeight() / scale};
 
         Bitmap originalWheel = BitmapFactory.decodeResource(getResources(), R.drawable.wheel);
-        int[] originalWheelWithHeight = {originalWheel.getWidth() / 15, originalWheel.getHeight() / 15};
+        int[] originalWheelSize = {originalWheel.getWidth() / scale, originalWheel.getHeight() / scale};
 
         Bitmap originalHead1 = BitmapFactory.decodeResource(getResources(), R.drawable.heand);
-        int[] originalHead1WithHeight = {originalHead1.getWidth() / 15, originalHead1.getHeight() / 15};
+        int[] originalHead1Size = {originalHead1.getWidth() / scale, originalHead1.getHeight() / scale};
 
         Bitmap originalHead2 = BitmapFactory.decodeResource(getResources(), R.drawable.heand_2);
-        int[] originalHead2WithHeight = {originalHead2.getWidth() / 15, originalHead2.getHeight() / 15};
+        int[] originalHead2Size = {originalHead2.getWidth() / scale, originalHead2.getHeight() / scale};
 
-        body = loadAndScaleBitmap(context, R.drawable.body, originalBodyWithHeight[0], originalBodyWithHeight[1]);
-        head = loadAndScaleBitmap(context, R.drawable.head, originalHeadWithHeight[0], originalHeadWithHeight[1]);
-        wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelWithHeight[0], originalWheelWithHeight[1]);
-        head1 = loadAndScaleBitmap(context, R.drawable.heand, originalHead1WithHeight[0], originalHead1WithHeight[1]);
-        head2 = loadAndScaleBitmap(context, R.drawable.heand_2, originalHead2WithHeight[0], originalHead2WithHeight[1]);
+        int[] originalShoot1Size = {1709/4, 490/4};
+        int[] originalShoot2Size = {577/4, 353/4};
+
+        body = loadAndScaleBitmap(context, R.drawable.body, originalBodySize[0], originalBodySize[1]);
+        head = loadAndScaleBitmap(context, R.drawable.head, originalHeadSize[0], originalHeadSize[1]);
+        wheel = loadAndScaleBitmap(context, R.drawable.wheel, originalWheelSize[0], originalWheelSize[1]);
+        head1 = loadAndScaleBitmap(context, R.drawable.heand, originalHead1Size[0], originalHead1Size[1]);
+        head2 = loadAndScaleBitmap(context, R.drawable.heand_2, originalHead2Size[0], originalHead2Size[1]);
+        shoot1 = loadAndScaleBitmap(context, R.drawable.shoot_1, originalShoot1Size[0], originalShoot1Size[1]);
+        shoot2 = loadAndScaleBitmap(context, R.drawable.shoot_2, originalShoot2Size[0], originalShoot2Size[1]);
 
         player = new Player(300, 700);
 
@@ -66,30 +75,42 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // Draw the wheel
+        // Wheel
         Matrix matrix = new Matrix();
         matrix.postTranslate(-wheel.getWidth() / 2f, -wheel.getHeight() / 2f);
         matrix.postRotate(player.getWheelRotation());
-        matrix.postTranslate(player.getX() + body.getWidth() / 2 - 10, player.getY() - 10);
+        matrix.postTranslate(player.getX() + body.getWidth() / 2f - 10, player.getY() - 10);
         canvas.drawBitmap(wheel, matrix, null);
 
-        // Draw head1
-        canvas.drawBitmap(head1, player.getX() + 20, player.getY() - body.getHeight() + 170 - head1.getHeight() - 10, null);
+        // Head1
+        canvas.drawBitmap(head1, player.getX() + 20,
+                player.getY() - body.getHeight() + 170 - head1.getHeight() - 10, null);
 
-        // Draw head2
-        canvas.drawBitmap(head2, player.getX() + body.getWidth()-25, player.getY() - body.getHeight() + 150 - head2.getHeight() - 20, null);
+        // Head2
+        canvas.drawBitmap(head2, player.getX() + body.getWidth() - 25,
+                player.getY() - body.getHeight() + 150 - head2.getHeight() - 20, null);
 
-        // Draw  body
+        // Body
         canvas.drawBitmap(body, player.getX(), player.getY() - body.getHeight(), null);
 
-        // Draw head
-        canvas.drawBitmap(head, (body.getWidth() / 4) + player.getX(), player.getY() - body.getHeight() + 10 - head.getHeight(), null);
+        // Head
+        canvas.drawBitmap(head,
+                player.getX() + body.getWidth() / 2f - head.getWidth() / 2f,
+                player.getY() - body.getHeight() - head.getHeight() + 10,
+                null);
 
+        // Shoot1
+        canvas.drawBitmap(shoot1,
+                player.getX() + 10,
+                player.getY() - body.getHeight() + 150,
+                null);
 
+        // Shoot2
+        canvas.drawBitmap(shoot2,
+                player.getX() + body.getWidth() - shoot2.getWidth() + 100,
+                player.getY() - body.getHeight() + 90,
+                null);
     }
-
-
-
 
     public void moveLeft(boolean start) {
         player.moveLeft(start);
