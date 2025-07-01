@@ -67,13 +67,16 @@ public class Player {
     }
 
     public void update() {
+        // Rotate the wheel based on movement
+        if (movingLeft || movingRight) {
+            wheelRotation += speed; // Adjust the speed of rotation as needed
+        }
+
         if (movingLeft) {
             x -= speed;
-            wheelRotation -= facingRight ? 15 : -15;
         }
         if (movingRight) {
             x += speed;
-            wheelRotation += facingRight ? 15 : -15;
         }
         if (isJumping) {
             jumpY += jumpSpeed;
@@ -109,6 +112,7 @@ public class Player {
             breatheTimer = 0;
         }
     }
+
 
     public int getX() {
         return x;
