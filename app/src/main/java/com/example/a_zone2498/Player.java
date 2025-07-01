@@ -8,7 +8,7 @@ public class Player {
     public float jumpSpeed = 20;
     public float jumpLimit = 550;
     private float jumpHeight = 250;
-
+    private boolean facingRight = true;
     private int wheelRotation = 0;
     private boolean movingLeft = false;
     private boolean movingRight = false;
@@ -37,10 +37,16 @@ public class Player {
 
     public void moveLeft(boolean start) {
         movingLeft = start;
+        if (start) {
+            facingRight = false;
+        }
     }
 
     public void moveRight(boolean start) {
         movingRight = start;
+        if (start) {
+            facingRight = true;
+        }
     }
 
     public void jump() {
@@ -50,9 +56,12 @@ public class Player {
         }
     }
 
-    public void shoot() {
-        bullets.add(new Bullet(x + 400, y - 135));
-        bullets.add(new Bullet(x + 390, y - 200));
+    public void shoot(int bullet1OffsetXRight, int bullet1OffsetXLeft, int bullet1OffsetY, int bullet2OffsetXRight, int bullet2OffsetXLeft, int bullet2OffsetY) {
+        // Adjust bullet spawn positions based on direction
+        int bullet1OffsetX = facingRight ? bullet1OffsetXRight : bullet1OffsetXLeft;
+        int bullet2OffsetX = facingRight ? bullet2OffsetXRight : bullet2OffsetXLeft;
+        bullets.add(new Bullet(x + bullet1OffsetX, y - bullet1OffsetY, facingRight));
+        bullets.add(new Bullet(x + bullet2OffsetX, y - bullet2OffsetY, facingRight));
         isRecoiling = true;
         recoilTimer = 0;
     }
@@ -60,11 +69,11 @@ public class Player {
     public void update() {
         if (movingLeft) {
             x -= speed;
-            wheelRotation -= 15;
+            wheelRotation -= facingRight ? 15 : -15;
         }
         if (movingRight) {
             x += speed;
-            wheelRotation += 15;
+            wheelRotation += facingRight ? 15 : -15;
         }
         if (isJumping) {
             jumpY += jumpSpeed;
@@ -149,5 +158,13 @@ public class Player {
             }
         }
         bullets.removeAll(toRemove);
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
     }
 }
